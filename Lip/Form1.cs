@@ -36,7 +36,7 @@ namespace lip
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (ipGet.CheckPort(textBox3.Text) == true)
+            if (ipGet.CheckPort(Convert.ToInt32(textBox3.Text)) == true)
             {
                 label3.BackColor = Color.Green;
             }
@@ -70,9 +70,8 @@ namespace lip
 
         private void ReCheck()
         {
-            ipGet.CheckIPs();
-            textBox1.Text = ipGet.LocalIP;
-            textBox2.Text = ipGet.ExternalIP;
+            textBox1.Text = IpGet.CheckLocalIP();
+            textBox2.Text = IpGet.CheckExternalIP();
         }
 
         private void button2_Click(object sender, EventArgs e)

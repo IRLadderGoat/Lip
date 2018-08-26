@@ -1,0 +1,7 @@
+H:\OneDrive\repos\Lip\Lip\bin\Release\lip.exe.config
+H:\OneDrive\repos\Lip\Lip\bin\Release\lip.exe
+H:\OneDrive\repos\Lip\Lip\obj\Release\lip.Form1.resources
+H:\OneDrive\repos\Lip\Lip\obj\Release\lip.Properties.Resources.resources
+H:\OneDrive\repos\Lip\Lip\obj\Release\lip.csproj.GenerateResource.Cache
+H:\OneDrive\repos\Lip\Lip\obj\Release\lip.csproj.CoreCompileInputs.cache
+H:\OneDrive\repos\Lip\Lip\obj\Release\lip.exe

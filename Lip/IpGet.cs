@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 
@@ -7,53 +6,56 @@ namespace lip
 {
     class IpGet
     {
-        public string LocalIP, ExternalIP;
-        private Random random = new Random();
-
-        public IpGet(){
-            CheckIPs();
-        }
-        public void CheckIPs()
+        public static string CheckLocalIP()
         {
             IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
             foreach (IPAddress a in localIPs)
             {
                 if (IPAddress.Parse(a.ToString()).AddressFamily == AddressFamily.InterNetwork)
                 {
-                    LocalIP = a.ToString();
+                    return a.ToString();
                 }
             }
-            
-            using (WebClient webClient = new WebClient())
+            return CheckLocalIP();
+        }
+        public static string CheckExternalIP()
+        {
+            try
             {
-                try
+                using (WebClient webClient = new WebClient())
                 {
-                    webClient.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
-                    ExternalIP = webClient.DownloadString("http://icanhazip.com/");
 
-                }catch (WebException e)
-                {
-                    System.Windows.Forms.MessageBox.Show("Try again in a second \n\n Error Message: \n" + e.Message);
+                    webClient.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.NoCacheNoStore);
+                    return webClient.DownloadString("http://icanhazip.com/");
                 }
+            }
+            catch (Exception)
+            {
+                return CheckExternalIP();
             }
         }
-        public bool CheckPort(string port)
+        public bool CheckPort(int port)
         {
-            if(port == "")
-            {
-                return false;
-            }
-            using (TcpClient client = new TcpClient())
+            if (port <= 0 || port >= 65535) { return false; }
+            else
             {
                 try
                 {
-                    client.Connect(IPAddress.Loopback, Convert.ToInt32(port));
+                    using (TcpClient client = new TcpClient())
+                    {
+                        var cl = client.BeginConnect(IPAddress.Parse(CheckLocalIP()), port, null, null);
+                        var kk = cl.AsyncWaitHandle.WaitOne(new TimeSpan(0, 0, 10));
+                        if (!kk)
+                        {
+                            return false;
+                        }
+                        client.EndConnect(cl);
+                    }
                 }
                 catch (SocketException)
                 {
                     return false;
                 }
-                client.Close();
                 return true;
             }
         }
